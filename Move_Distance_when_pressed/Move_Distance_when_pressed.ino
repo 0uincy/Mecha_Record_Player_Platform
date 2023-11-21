@@ -2,6 +2,7 @@
 // ESP32s WROOM Dev Module, TMC2208 Drivers
 
 #include <AccelStepper.h>
+#include <MultiStepper.h>
 
 // Define control pins & respective variables
 const int Cpin = 36;  // clockwise
@@ -10,7 +11,7 @@ int Cwise = 0;
 int CCwise = 0;
 
 // Define default speed
-const int speed = 12800;
+const int speed = 32000;
 
 // Define motors & their respective direction and step pins
 AccelStepper stepper1( AccelStepper::DRIVER, 14 , 12 );
@@ -27,8 +28,10 @@ void setup()
   stepper2.setPinsInverted( false, false, true );
 
   // Define motor parameters
-  stepper1.setMaxSpeed( 16000 );
-  stepper2.setMaxSpeed( 16000 );
+  stepper1.setMaxSpeed( 32000 );
+  stepper2.setMaxSpeed( 32000 );
+  stepper1.setAcceleration( 64000 );
+  stepper2.setAcceleration( 64000 );
   stepper1.setSpeed(speed);
   stepper2.setSpeed(speed);
 
@@ -45,31 +48,21 @@ void loop() // Movement control
 
   // Clockwise motion if Cpin high
   if (Cwise == HIGH){ 
-    while (Cwise == HIGH){
-      stepper1.setSpeed(speed);
-      stepper2.setSpeed(speed);
-      stepper1.runSpeed();
-      stepper2.runSpeed();
-      Cwise = digitalRead(Cpin);
-    }
+    stepper1.runToNewPosition( 24000 );
+    stepper1.disableOutputs();
+    stepper2.runToNewPosition( 24000 );
+    stepper2.disableOutputs();
   }
 
   // Counter clockwise motion if  CCpin high
   else if (CCwise == HIGH){ 
-    while (CCwise == HIGH){
-    stepper1.setSpeed(-1*speed);
-    stepper2.setSpeed(-1*speed);
-    stepper1.runSpeed();
-    stepper2.runSpeed();
-    CCwise = digitalRead(CCpin);
-    }
+    stepper1.enableOutputs();
+    stepper1.runToNewPosition( 0 );
+    stepper2.enableOutputs();
+    stepper2.runToNewPosition( 0 );
   }
 
   // No motion if Cpin and CCpin are low
   else{
-    stepper1.setSpeed(0);
-    stepper2.setSpeed(0);
-    stepper1.runSpeed();
-    stepper2.runSpeed();
   }
 }
