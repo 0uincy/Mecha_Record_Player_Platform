@@ -1,24 +1,25 @@
-// Move two stepper motors with acceleration parameters between two fixed
-// positions with a button press.
+//Move two stepper motors with acceleration parameters between two fixed
+//positions with a button press.
 
 #include <AccelStepper.h>
 
 const int goPin = 36;  //activation button pinout
 
-// Define motors & their respective direction and step pins
+//Define motors & their respective direction and step pins
 AccelStepper stepper1( AccelStepper::DRIVER, 14 , 12 );
 AccelStepper stepper2( AccelStepper::DRIVER, 32 , 33 );
 
-float acceleration = 0.25; //in m/s^2
-float maxSpeed = 500;      //in mm/s
-int travelDistance = 150;  //in mm
-int conversion = 160;      //in steps/mm
+float acceleration = 0.035; //in m/s^2
+float maxSpeed = 250;       //in mm/s
+int travelDistance = 150;   //in mm
+int conversion = 160;       //in steps/mm
 
 float acc;
 float speed;
 long int travel;
 int state;
 int go;
+int stop;
 
 void setup()
 { 
