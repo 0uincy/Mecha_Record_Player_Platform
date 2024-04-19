@@ -4,6 +4,9 @@
 #include <AccelStepper.h>
 
 const int goPin = 13;  //activation button pinout
+const int ms1 = 23;
+const int ms2 = 22;
+const int spread = 21;
 
 //Define motors & their respective direction and step pins
 AccelStepper stepper1( AccelStepper::DRIVER, 33 , 25 );    //step, dir
@@ -12,7 +15,7 @@ AccelStepper stepper2( AccelStepper::DRIVER, 27 , 14 );
 float acceleration = 35;    //in mm/s^2
 float maxSpeed = 250;       //in mm/s
 int travelDistance = 150;   //in mm
-int conversion = 160;       //in steps/mm
+int conversion = 16*10;     //steps/rotation * mm/rotation
 
 float acc;
 float speed;
@@ -33,9 +36,15 @@ void setup()
 
   //Initialize pins & invert enable pin
   pinMode(goPin,INPUT);
+  pinMode(ms1, OUTPUT);
+  digitalWrite(ms1, HIGH);
+  pinMode(ms2, OUTPUT);
+  digitalWrite(ms2, HIGH);
+  pinMode(spread, OUTPUT);
+  digitalWrite(spread, LOW);
   stepper1.setEnablePin(32);
   stepper2.setEnablePin(26); 
-  stepper1.setPinsInverted(true, false, true); //direction, step, enable
+  stepper1.setPinsInverted(true, false, true);   //direction, step, enable
   stepper2.setPinsInverted(false, false, true);
 
   //Define motor parameters
